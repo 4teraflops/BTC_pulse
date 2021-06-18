@@ -43,7 +43,7 @@ def connect(rebuild_db=False):
 
 
 def check_database(rebuild_db=False):
-    logger.debug('Check db')
+    logger.debug('Check db models')
 
     if rebuild_db:
         cursor = connect(rebuild_db=True).cursor()
@@ -90,4 +90,24 @@ def check_database(rebuild_db=False):
             "    OWNER to postgres;"
             "COMMENT ON TABLE public.actual_price "
             "    IS 'Актуальные цены';"
+        )
+    elif 'profit' not in res:
+        logger.debug('Creating table profit')
+        cursor.execute(
+            '''
+            CREATE TABLE IF NOT EXISTS public.profit
+            (
+                id serial NOT NULL,
+                "timestamp" timestamp without time zone NOT NULL,
+                profit_rub numeric NOT NULL,
+                profit_percent numeric NOT NULL,
+                PRIMARY KEY (id)
+            );
+
+            ALTER TABLE public.profit
+                OWNER to postgres;
+
+            COMMENT ON TABLE public.profit
+                IS 'данные по профиту';
+            '''
         )

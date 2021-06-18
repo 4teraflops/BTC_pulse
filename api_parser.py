@@ -70,10 +70,17 @@ def get_actual_price():
 
 
 def calculate_profits():
-    profit_rub = result['asset_actual_rub'] - result['purchase_sum']
-    result['profit_rub'] = round(profit_rub, 2)
+    asset_actual_rub = db.interaction.get_asset_actual_rub()
+    purchase_sum = db.interaction.get_purchase_sum()
+    profit_rub = round(asset_actual_rub - purchase_sum, 2)
+    profit_percent = round(profit_rub / purchase_sum, 2) * 100
+    timestamp = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
+    #logger.debug(f'asset_actual_rub: {asset_actual_rub}\npurchase_sum: {purchase_sum}\nprofit_rub: {profit_rub}\nprofit_percent: {profit_percent}')
 
-    profit_percent = result['profit_rub'] / result['purchase_sum'] * 100
-    result['profit_percent'] = round(profit_percent, 2)
+    return {
+        "timestamp": timestamp,
+        "profit_rub": profit_rub,
+        "profit_percent": profit_percent
+    }
 
 

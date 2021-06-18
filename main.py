@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 import db.interaction
 from threading import Thread
 import time
+import metrics.metrics
 
 logger.add(f'log/{__name__}.log', format='{time} {level} {message}', level='DEBUG', rotation='10 MB', compression='zip')
 
@@ -25,7 +26,12 @@ class UpdateAsset(Thread):
             time.sleep(43200)
 
 
-
+class UpdateProfit(Thread):
+    # Профит апдейтим каждые 3 минуты
+    def run(self):
+        while True:
+            db.interaction.update_profit()
+            time.sleep(180)
 
 
 if __name__ == '__main__':
@@ -43,11 +49,14 @@ if __name__ == '__main__':
         UpdateActualPrice_worker = UpdateActualPrice()
         UpdateActualPrice_worker.start()
 
+        UpdateProfit_worker = UpdateProfit()
+        UpdateProfit_worker.start()
+
         UpdateAsset_worker = UpdateAsset()
         UpdateAsset_worker.start()
 
-        #update_actual_price.start()
-        #update_asset_thread.start()
+        Metrics_worker = metrics.metrics.run()
+        Metrics_worker.start()
 
     except KeyboardInterrupt:
         print('Stopped')
