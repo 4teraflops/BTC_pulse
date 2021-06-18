@@ -16,6 +16,7 @@ def update_asset():
                     '''
     cursor.execute(insert_query)
     logger.debug('Asset updated')
+    return 'OK'
 
 
 def get_actual_asset_sum():
@@ -26,6 +27,7 @@ def get_actual_asset_sum():
     LIMIT 1
     '''
     cursor.execute(select_query)
+    #logger.debug(f'cursor fetch all: {cursor.fetchall()}')
     result = float(cursor.fetchall()[0][0])
     # logger.debug(f'result: {type(result)}')
     return result
@@ -34,7 +36,7 @@ def get_actual_asset_sum():
 def update_actual_price():
     cursor = db.client.connect().cursor()
     payload = api_parser.get_actual_price()
-    # logger.debug(f'payload: {payload}')
+    #logger.debug(f'payload: {payload}')
     insert_query = f'''
                         INSERT INTO actual_price
                         (datetime, btc_usd, btc_rub, asset_actual_rub)
@@ -42,6 +44,7 @@ def update_actual_price():
                     '''
     cursor.execute(insert_query)
     logger.debug('actual_price updated')
+    return 'OK'
 
 
 def get_asset_actual_rub():
@@ -79,6 +82,7 @@ def update_profit():
                     '''
     cursor.execute(insert_query)
     logger.debug('profit updated')
+    return 'OK'
 
 
 def get_profit_percent():

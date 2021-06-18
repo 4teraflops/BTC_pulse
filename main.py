@@ -37,7 +37,7 @@ class UpdateProfit(Thread):
 if __name__ == '__main__':
     try:
         # Проверка БД и таблиц
-        check_db_thread = Thread(target=db.client.check_database(rebuild_db=False), daemon=True)
+        check_db_thread = Thread(target=db.client.check_database(rebuild_db=True), daemon=True)
         #now = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
         # Обнволение данных из гугл таблицы
         #update_asset_thread = Thread(target=db.interaction.update_asset(), daemon=True)
@@ -45,15 +45,20 @@ if __name__ == '__main__':
         #update_actual_price = Thread(target=api_parser.get_actual_price(), daemon=True)
 
         check_db_thread.start()
+        check_db_thread.join()
 
-        UpdateActualPrice_worker = UpdateActualPrice()
-        UpdateActualPrice_worker.start()
+        if db.interaction.update_asset() == 'OK':
+            UpdateAsset_worker = UpdateAsset()
+            UpdateAsset_worker.start()
 
-        UpdateProfit_worker = UpdateProfit()
-        UpdateProfit_worker.start()
+        if db.interaction.update_actual_price() == 'OK':
+            UpdateActualPrice_worker = UpdateActualPrice()
+            UpdateActualPrice_worker.start()
 
-        UpdateAsset_worker = UpdateAsset()
-        UpdateAsset_worker.start()
+        if db.interaction.update_profit() == 'OK':
+            UpdateProfit_worker = UpdateProfit()
+            UpdateProfit_worker.start()
+
 
         Metrics_worker = metrics.metrics.run()
         Metrics_worker.start()

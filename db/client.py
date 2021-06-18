@@ -17,10 +17,10 @@ def get_connection(db_created=False):
     #try:
     # Подключение к существующей базе данных
     conn = psycopg2.connect(
-        user="postgres",
+        user=f"{config.db_user}",
         password=f"{config.db_password}",
-        host="localhost",
-        port="5432",
+        host=f"{config.db_host}",
+        port=f"{config.db_port}",
         database=f'{database}'
     )
     #logger.debug(f'database: {database}')
@@ -74,7 +74,7 @@ def check_database(rebuild_db=False):
             "COMMENT ON TABLE public.asset"
             "    IS 'Информация по номинальной стоимости актива';"
         )
-    elif 'actual_price' not in res:
+    if 'actual_price' not in res:
         logger.debug('Creating table actual_price')
         cursor.execute(
             "CREATE TABLE IF NOT EXISTS public.actual_price "
@@ -91,7 +91,7 @@ def check_database(rebuild_db=False):
             "COMMENT ON TABLE public.actual_price "
             "    IS 'Актуальные цены';"
         )
-    elif 'profit' not in res:
+    if 'profit' not in res:
         logger.debug('Creating table profit')
         cursor.execute(
             '''
