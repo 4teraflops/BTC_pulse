@@ -1,6 +1,6 @@
 FROM python:3.9
 
-ADD /reuirements.txt project/reuirements.txt
+ADD /requirements.txt project/requirements.txt
 ADD /api_parser.py project/api_parser.py
 ADD /main.py project/main.py
 ADD /db/client.py project/db/client.py
