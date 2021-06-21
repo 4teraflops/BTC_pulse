@@ -5,7 +5,8 @@ from prometheus_client import start_http_server
 import db.interaction
 from loguru import logger
 
-logger.add(f'{__name__}.log', format='{time} {level} {message}', level='DEBUG', rotation='10 MB', compression='zip')
+logger.add(f'log/{__name__}.log', format='{time} {level} {message}', level='DEBUG', rotation='10 MB', compression='zip')
+logger.debug('test')
 
 
 def get_cpu_procent():
