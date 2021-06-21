@@ -47,6 +47,14 @@ def get_profit_rub():
     return db.interaction.get_profit_rub()
 
 
+def get_btc_usd():
+    return db.interaction.get_bts_usd()
+
+
+def get_btc_rub():
+    return db.interaction.get_btc_rub()
+
+
 class CustomCollector(object):
     def __init__(self):
         pass
@@ -84,6 +92,14 @@ class CustomCollector(object):
         profit_rub_metric = get_profit_rub()
         profit_rub.add_metric([], profit_rub_metric)
 
+        btc_usd = GaugeMetricFamily('btc_usd', 'Текущий крс битка в долларах')
+        btc_usd_metric = get_btc_usd()
+        btc_usd.add_metric([], btc_usd_metric)
+
+        btc_rub = GaugeMetricFamily('btc_rub', 'Текущий крс битка в рублях')
+        btc_rub_metric = get_btc_rub()
+        btc_rub.add_metric([], btc_rub_metric)
+
         yield cpu_usage
         yield ram_usage
         yield disk_usage_percent
@@ -92,6 +108,8 @@ class CustomCollector(object):
         yield asset_actual_rub
         yield profit_percent
         yield profit_rub
+        yield btc_usd
+        yield btc_rub
 
 
 def run():

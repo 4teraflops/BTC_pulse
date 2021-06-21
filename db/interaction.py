@@ -71,6 +71,30 @@ def get_purchase_sum():
     return result
 
 
+def get_bts_usd():
+    cursor = db.client.connect().cursor()
+    select_query = '''
+    SELECT btc_usd FROM actual_price
+    ORDER BY id DESC
+    LIMIT 1
+    '''
+    cursor.execute(select_query)
+    result = float(cursor.fetchall()[0][0])
+    return result
+
+
+def get_btc_rub():
+    cursor = db.client.connect().cursor()
+    select_query = '''
+    SELECT btc_rub FROM actual_price
+    ORDER BY id DESC
+    LIMIT 1
+    '''
+    cursor.execute(select_query)
+    result = float(cursor.fetchall()[0][0])
+    return result
+
+
 def update_profit():
     cursor = db.client.connect().cursor()
     payload = api_parser.calculate_profits()

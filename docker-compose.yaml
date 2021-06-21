@@ -1,0 +1,47 @@
+version: "3"
+
+networks:
+  monitoring_stack_loki:
+    external: true
+
+services:
+
+ postgresql_db:
+   container_name: postgresql_db
+   restart: always
+   image: postgres:10-alpine
+   environment:
+     POSTGRES_USER: postgres
+     POSTGRES_PASSWORD: e99XkkL1VmuZ
+     POSTGRES_DB: my_db
+   ports:
+     - "5432:5432"
+   networks:
+     - monitoring_stack_loki
+
+ custom_metrics:
+   container_name: custom_metrics
+   restart: always
+   build: ./
+   ports:
+     - "8001:8001"
+   links:
+     - postgresql_db:postgresql_db
+   depends_on:
+     - postgresql_db
+   networks:
+     - monitoring_stack_loki
+
+ pgadmin:
+   container_name: pgadmin
+   restart: always
+   image: thajeztah/pgadmin4
+   ports:
+     - "5050:5050"
+   depends_on:
+     - postgresql_db
+   networks:
+     - monitoring_stack_loki
+
+
+
