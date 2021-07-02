@@ -1,4 +1,3 @@
-import psutil
 import time
 from prometheus_client.core import GaugeMetricFamily, REGISTRY, CounterMetricFamily
 from prometheus_client import start_http_server
@@ -66,10 +65,6 @@ class CustomCollector(object):
         btc_rub_metric = get_btc_rub()
         btc_rub.add_metric([], btc_rub_metric)
 
-        yield cpu_usage
-        yield ram_usage
-        yield disk_usage_percent
-        yield disk_free_space
         yield actual_asset_sum
         yield asset_actual_rub
         yield profit_percent
