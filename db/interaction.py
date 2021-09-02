@@ -15,7 +15,7 @@ def update_asset():
                         VALUES ('{payload["check_datetime"]}', '{payload["asset_sum"]}', '{payload["purchase_sum"]}');
                     '''
     cursor.execute(insert_query)
-    logger.debug('Asset updated')
+    #logger.debug('Asset updated')
     return 'OK'
 
 
@@ -43,7 +43,7 @@ def update_actual_price():
                         VALUES ('{payload["actual_datetime"]}', '{payload["btc_usd"]}', '{payload["btc_rub"]}', '{payload["asset_actual_rub"]}');
                     '''
     cursor.execute(insert_query)
-    logger.debug('actual_price updated')
+    #logger.debug('actual_price updated')
     return 'OK'
 
 
@@ -105,7 +105,7 @@ def update_profit():
                     VALUES ('{payload["timestamp"]}', '{payload["profit_rub"]}', '{payload["profit_percent"]}');
                     '''
     cursor.execute(insert_query)
-    logger.debug('profit updated')
+    #logger.debug('profit updated')
     return 'OK'
 
 
