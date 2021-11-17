@@ -97,7 +97,11 @@ def get_btc_rub():
 
 def update_profit():
     cursor = db.client.connect().cursor()
-    payload = api_parser.calculate_profits()
+    try:
+        payload = api_parser.calculate_profits()
+    except ZeroDivisionError:
+        logger.debug('Деление на 0 из-за нулевого капитала')
+        payload = 0
     #logger.debug(f'payload: {payload}')
     insert_query = f'''
                     INSERT INTO profit
