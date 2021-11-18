@@ -15,7 +15,7 @@ def update_asset():
                         VALUES ('{payload["check_datetime"]}', '{payload["asset_sum"]}', '{payload["purchase_sum"]}');
                     '''
     cursor.execute(insert_query)
-    logger.debug('Asset updated')
+    #logger.debug('Asset updated')
     return 'OK'
 
 
@@ -47,7 +47,7 @@ def update_actual_price():
                         VALUES ('{payload["actual_datetime"]}', '{payload["btc_usd"]}', '{payload["btc_rub"]}', '{payload["asset_actual_rub"]}');
                     '''
     cursor.execute(insert_query)
-    logger.debug('actual_price updated')
+    #logger.debug('actual_price updated')
     return 'OK'
 
 
@@ -102,7 +102,7 @@ def get_btc_rub():
 def update_profit():
     cursor = db.client.connect().cursor()
     payload = api_parser.calculate_profits()
-    logger.debug(f'payload: {payload}')
+    #logger.debug(f'payload: {payload}')
     insert_query = f'''
                     INSERT INTO profit
                     (timestamp, profit_rub, profit_percent)
