@@ -2,7 +2,7 @@ from loguru import logger
 import db.client
 import api_parser
 
-logger.add(f'log/{__name__}.log', format='{time} {level} {message}', level='DEBUG', rotation='10 MB', compression='zip')
+logger.add(f'log/{__name__}.log', format='{time} {level} {message}', level='ERROR', rotation='10 MB', compression='zip')
 
 
 def update_asset():
@@ -15,7 +15,7 @@ def update_asset():
                         VALUES ('{payload["check_datetime"]}', '{payload["asset_sum"]}', '{payload["purchase_sum"]}');
                     '''
     cursor.execute(insert_query)
-    #logger.debug('Asset updated')
+    logger.debug('Asset updated')
     return 'OK'
 
 
@@ -35,7 +35,11 @@ def get_actual_asset_sum():
 
 def update_actual_price():
     cursor = db.client.connect().cursor()
-    payload = api_parser.get_actual_price()
+    try:
+        payload = api_parser.get_actual_price()
+    except TypeError:
+        logger.error('Cant read api_parser.get_actual_price()')
+        pass
     #logger.debug(f'payload: {payload}')
     insert_query = f'''
                         INSERT INTO actual_price
@@ -43,7 +47,7 @@ def update_actual_price():
                         VALUES ('{payload["actual_datetime"]}', '{payload["btc_usd"]}', '{payload["btc_rub"]}', '{payload["asset_actual_rub"]}');
                     '''
     cursor.execute(insert_query)
-    #logger.debug('actual_price updated')
+    logger.debug('actual_price updated')
     return 'OK'
 
 
@@ -98,14 +102,14 @@ def get_btc_rub():
 def update_profit():
     cursor = db.client.connect().cursor()
     payload = api_parser.calculate_profits()
-    #logger.debug(f'payload: {payload}')
+    logger.debug(f'payload: {payload}')
     insert_query = f'''
                     INSERT INTO profit
                     (timestamp, profit_rub, profit_percent)
                     VALUES ('{payload["timestamp"]}', '{payload["profit_rub"]}', '{payload["profit_percent"]}');
                     '''
     cursor.execute(insert_query)
-    #logger.debug('profit updated')
+    logger.debug('profit updated')
     return 'OK'
 
 
