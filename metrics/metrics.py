@@ -5,7 +5,6 @@ import db.interaction
 from loguru import logger
 
 logger.add(f'log/{__name__}.log', format='{time} {level} {message}', level='DEBUG', rotation='10 MB', compression='zip')
-logger.debug('test')
 
 
 def get_asset_actual_sum():
