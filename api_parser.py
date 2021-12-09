@@ -28,7 +28,12 @@ def get_asset():
     for key in values:
         asset_sum_element = float(key['Кол-во'].replace(',', '.'))
         asset_sum_list.append(asset_sum_element)
-        purchase_sum_element = float(key['Стоимость закупа'].replace(',', '.'))
+
+        try:
+            purchase_sum_element = float(key['Стоимость закупа'].replace(',', '.'))
+        except AttributeError:
+            purchase_sum_element = float(key['Стоимость закупа'])
+
         purchase_sum_list.append(purchase_sum_element)
     check_datetime = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
     asset_sum = sum(asset_sum_list)
