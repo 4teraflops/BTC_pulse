@@ -83,7 +83,7 @@ def calculate_profits():
     timestamp = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
     try:
         profit_percent = round(profit_rub / purchase_sum * 100, 2)
-        logger.debug(f"profit_percent=")
+        #logger.debug(f"profit_percent=")
         #logger.debug(f'asset_actual_rub: {asset_actual_rub}\npurchase_sum: {purchase_sum}\nprofit_rub: {profit_rub}\nprofit_percent: {profit_percent}')
         return {
             "timestamp": timestamp,

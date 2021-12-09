@@ -2,7 +2,7 @@ import psycopg2
 from src import config
 from loguru import logger
 
-logger.add(f'log/{__name__}.log', format='{time} {level} {message}', level='DEBUG', rotation='10 MB', compression='zip')
+logger.add(f'log/{__name__}.log', format='{time} {level} {message}', level='INFO', rotation='10 MB', compression='zip')
 
 
 def get_connection(db_created=False):
@@ -34,7 +34,7 @@ def get_connection(db_created=False):
 def connect(rebuild_db=False):
     conn = get_connection()
     if rebuild_db:
-        logger.debug('Rebuild db')
+        #logger.debug('Rebuild db')
         cursor = conn.cursor()
         cursor.execute(f'DROP DATABASE IF EXISTS {config.db_name}')
         cursor.execute(f'CREATE DATABASE {config.db_name}')
@@ -43,7 +43,7 @@ def connect(rebuild_db=False):
 
 
 def check_database(rebuild_db=False):
-    logger.debug('Check db models')
+    #logger.debug('Check db models')
 
     if rebuild_db:
         cursor = connect(rebuild_db=True).cursor()
@@ -59,7 +59,7 @@ def check_database(rebuild_db=False):
 
     #logger.debug(res)
     if 'asset' not in res:
-        logger.debug('Creating table asset')
+        #logger.debug('Creating table asset')
         cursor.execute(
             "CREATE TABLE IF NOT EXISTS public.asset"
             "("
@@ -75,7 +75,7 @@ def check_database(rebuild_db=False):
             "    IS 'Информация по номинальной стоимости актива';"
         )
     if 'actual_price' not in res:
-        logger.debug('Creating table actual_price')
+        #logger.debug('Creating table actual_price')
         cursor.execute(
             "CREATE TABLE IF NOT EXISTS public.actual_price "
             "("
@@ -92,7 +92,7 @@ def check_database(rebuild_db=False):
             "    IS 'Актуальные цены';"
         )
     if 'profit' not in res:
-        logger.debug('Creating table profit')
+        #logger.debug('Creating table profit')
         cursor.execute(
             '''
             CREATE TABLE IF NOT EXISTS public.profit

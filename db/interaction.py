@@ -38,7 +38,7 @@ def update_actual_price():
     try:
         payload = api_parser.get_actual_price()
     except TypeError:
-        logger.error('Cant read api_parser.get_actual_price()')
+        #logger.error('Cant read api_parser.get_actual_price()')
         pass
     #logger.debug(f'payload: {payload}')
     insert_query = f'''
@@ -109,7 +109,7 @@ def update_profit():
                     VALUES ('{payload["timestamp"]}', '{payload["profit_rub"]}', '{payload["profit_percent"]}');
                     '''
     cursor.execute(insert_query)
-    logger.debug('profit updated')
+    #logger.debug('profit updated')
     return 'OK'
 
 
