@@ -65,7 +65,7 @@ if __name__ == '__main__':
 
     except KeyboardInterrupt:
         print('Stopped')
-    #except Exception as e:
-    #    t_alarmtext = f'BTC_Pulse (parser.py): {str(e)}'
-    #    api_parser.do_alarm(t_alarmtext)
-    #    logger.error(f'Other except error Exception: {e}', exc_info=True)
+    except Exception as e:
+        t_alarmtext = f'BTC_Pulse (parser.py): {str(e)}'
+        api_parser.do_alarm(t_alarmtext)
+        logger.error(f'Other except error Exception: {e}', exc_info=True)

@@ -2,7 +2,7 @@ from loguru import logger
 import db.client
 import api_parser
 
-logger.add(f'log/{__name__}.log', format='{time} {level} {message}', level='DEBUG', rotation='10 MB', compression='zip')
+logger.add(f'log/{__name__}.log', format='{time} {level} {message}', level='ERROR', rotation='10 MB', compression='zip')
 
 
 def update_asset():
@@ -35,7 +35,11 @@ def get_actual_asset_sum():
 
 def update_actual_price():
     cursor = db.client.connect().cursor()
-    payload = api_parser.get_actual_price()
+    try:
+        payload = api_parser.get_actual_price()
+    except TypeError:
+        logger.error('Cant read api_parser.get_actual_price()')
+        pass
     #logger.debug(f'payload: {payload}')
     insert_query = f'''
                         INSERT INTO actual_price
@@ -105,7 +109,7 @@ def update_profit():
                     VALUES ('{payload["timestamp"]}', '{payload["profit_rub"]}', '{payload["profit_percent"]}');
                     '''
     cursor.execute(insert_query)
-    #logger.debug('profit updated')
+    logger.debug('profit updated')
     return 'OK'
 
 
