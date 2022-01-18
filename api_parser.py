@@ -5,6 +5,7 @@ import json
 from datetime import datetime
 import db.interaction
 from loguru import logger
+import time
 
 logger.add(f'log/{__name__}.log', format='{time} {level} {message}', level='DEBUG', rotation='10 MB', compression='zip')
 
@@ -57,7 +58,12 @@ def get_actual_price():
     btc_usd = btc_responce['data']['last']
 
     usd_url = 'https://www.cbr-xml-daily.ru/daily_json.js'
-    usd_request = s.get(usd_url)
+    try:
+        usd_request = s.get(usd_url)
+    except requests.exceptions.ConnectionError():  # Если ошибка подключения, то взять тймаут на 10с и повторно
+        logger.warning('https://www.cbr-xml-daily.ru/daily_json.js не отвечает. Таймаут 10с.')
+        time.sleep(10)
+        usd_request = s.get(usd_url)
     usd_responce = usd_request.json()
     usd_rub = usd_responce['Valute']['USD']['Value']
 
