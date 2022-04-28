@@ -19,7 +19,6 @@ def do_alarm(t_alarmtext):
     requests.post(url=webhook_url, data=json.dumps(payload), headers=headers)
 
 
-@logger.catch()
 def get_asset():
     # Подключаемся к google sheet
     gc = gspread.service_account(filename='src/creds.json')
@@ -27,6 +26,7 @@ def get_asset():
     # Выбираем вкладку
     worksheet = sh.worksheet("BTC")
     values = worksheet.get_all_records()
+    logger.info(f"values: {values}")
     asset_sum_list = []
     purchase_sum_list = []
     for key in values:
@@ -50,7 +50,6 @@ def get_asset():
     }
 
 
-@logger.catch()
 def get_actual_price():
     actual_datetime = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
     btc_url = 'https://api.bitaps.com/market/v1/ticker/btcusd'
