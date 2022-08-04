@@ -48,16 +48,31 @@ if __name__ == '__main__':
         check_db_thread.join()
 
         if db.interaction.update_asset() == 'OK':
-            UpdateAsset_worker = UpdateAsset()
-            UpdateAsset_worker.start()
+            try:
+                UpdateAsset_worker = UpdateAsset()
+                UpdateAsset_worker.start()
+            except Exception as e:
+                t_alarmtext = f'Update_asset Thread (main.py): {str(e)}'
+                api_parser.do_alarm(t_alarmtext)
+                logger.error(f'Other except error Exception: {e}', exc_info=True)
 
         if db.interaction.update_actual_price() == 'OK':
-            UpdateActualPrice_worker = UpdateActualPrice()
-            UpdateActualPrice_worker.start()
+            try:
+                UpdateActualPrice_worker = UpdateActualPrice()
+                UpdateActualPrice_worker.start()
+            except Exception as e:
+                t_alarmtext = f'update_actual_price Thread (main.py): {str(e)}'
+                api_parser.do_alarm(t_alarmtext)
+                logger.error(f'Other except error Exception: {e}', exc_info=True)
 
         if db.interaction.update_profit() == 'OK':
-            UpdateProfit_worker = UpdateProfit()
-            UpdateProfit_worker.start()
+            try:
+                UpdateProfit_worker = UpdateProfit()
+                UpdateProfit_worker.start()
+            except Exception as e:
+                t_alarmtext = f'update_profit Thread (main.py): {str(e)}'
+                api_parser.do_alarm(t_alarmtext)
+                logger.error(f'Other except error Exception: {e}', exc_info=True)
 
 
         Metrics_worker = metrics.metrics.run()
@@ -66,6 +81,6 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print('Stopped')
     except Exception as e:
-        t_alarmtext = f'BTC_Pulse (parser.py): {str(e)}'
+        t_alarmtext = f'BTC_Pulse (main.py): {str(e)}'
         api_parser.do_alarm(t_alarmtext)
         logger.error(f'Other except error Exception: {e}', exc_info=True)
