@@ -1,7 +1,6 @@
 import db.client
 import api_parser
 from loguru import logger
-from datetime import datetime, timedelta
 import db.interaction
 from threading import Thread
 import time
@@ -38,15 +37,10 @@ if __name__ == '__main__':
     try:
         # Проверка БД и таблиц
         check_db_thread = Thread(target=db.client.check_database(rebuild_db=True), daemon=True)
-        #now = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
-        # Обнволение данных из гугл таблицы
-        #update_asset_thread = Thread(target=db.interaction.update_asset(), daemon=True)
-        # Обновление актуальных ценников
-        #update_actual_price = Thread(target=api_parser.get_actual_price(), daemon=True)
 
         check_db_thread.start()
         check_db_thread.join()
-
+        # Обнволение данных из гугл таблицы
         if db.interaction.update_asset() == 'OK':
             try:
                 UpdateAsset_worker = UpdateAsset()
@@ -55,7 +49,7 @@ if __name__ == '__main__':
                 t_alarmtext = f'Update_asset Thread (main.py): {str(e)}'
                 api_parser.do_alarm(t_alarmtext)
                 logger.error(f'Other except error Exception: {e}', exc_info=True)
-
+        # Обновление актуальных ценников
         if db.interaction.update_actual_price() == 'OK':
             try:
                 UpdateActualPrice_worker = UpdateActualPrice()
@@ -64,7 +58,7 @@ if __name__ == '__main__':
                 t_alarmtext = f'update_actual_price Thread (main.py): {str(e)}'
                 api_parser.do_alarm(t_alarmtext)
                 logger.error(f'Other except error Exception: {e}', exc_info=True)
-
+        # Обновление расчетов профита
         if db.interaction.update_profit() == 'OK':
             try:
                 UpdateProfit_worker = UpdateProfit()
@@ -73,7 +67,6 @@ if __name__ == '__main__':
                 t_alarmtext = f'update_profit Thread (main.py): {str(e)}'
                 api_parser.do_alarm(t_alarmtext)
                 logger.error(f'Other except error Exception: {e}', exc_info=True)
-
 
         Metrics_worker = metrics.metrics.run()
         Metrics_worker.start()

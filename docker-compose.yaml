@@ -31,14 +31,3 @@ services:
      - fin_postgresql_db
    networks:
      - monitoring_stack_loki
-
-# pgadmin:
-#   container_name: pgadmin
-#   restart: always
-#   image: thajeztah/pgadmin4
-#   ports:
-#     - "5050:5050"
-#   depends_on:
-#     - postgresql_db
-#   networks:
-#     - monitoring_stack_loki

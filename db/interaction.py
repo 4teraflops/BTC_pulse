@@ -1,6 +1,7 @@
 from loguru import logger
 import db.client
 import api_parser
+import time
 
 logger.add(f'log/{__name__}.log', format='{time} {level} {message}', level='ERROR', rotation='10 MB', compression='zip')
 
@@ -8,14 +9,12 @@ logger.add(f'log/{__name__}.log', format='{time} {level} {message}', level='ERRO
 def update_asset():
     cursor = db.client.connect().cursor()
     payload = api_parser.get_asset()
-    # logger.debug(f'payload: {payload}')
     insert_query = f'''
                         INSERT INTO asset
                         (check_datetime, asset_sum, purchase_sum) 
                         VALUES ('{payload["check_datetime"]}', '{payload["asset_sum"]}', '{payload["purchase_sum"]}');
                     '''
     cursor.execute(insert_query)
-    #logger.debug('Asset updated')
     return 'OK'
 
 
@@ -27,9 +26,7 @@ def get_actual_asset_sum():
     LIMIT 1
     '''
     cursor.execute(select_query)
-    #logger.debug(f'cursor fetch all: {cursor.fetchall()}')
     result = float(cursor.fetchall()[0][0])
-    # logger.debug(f'result: {type(result)}')
     return result
 
 
@@ -38,16 +35,17 @@ def update_actual_price():
     try:
         payload = api_parser.get_actual_price()
     except TypeError:
-        #logger.error('Cant read api_parser.get_actual_price()')
+        logger.error('Cant read api_parser.get_actual_price(): TypeError')
+        logger.warning('https://www.cbr-xml-daily.ru/daily_json.js не отвечает. Таймаут 10с.')
+        time.sleep(10)
+        payload = api_parser.get_actual_price()
         pass
-    #logger.debug(f'payload: {payload}')
     insert_query = f'''
                         INSERT INTO actual_price
                         (datetime, btc_usd, btc_rub, asset_actual_rub)
                         VALUES ('{payload["actual_datetime"]}', '{payload["btc_usd"]}', '{payload["btc_rub"]}', '{payload["asset_actual_rub"]}');
                     '''
     cursor.execute(insert_query)
-    #logger.debug('actual_price updated')
     return 'OK'
 
 
@@ -102,14 +100,12 @@ def get_btc_rub():
 def update_profit():
     cursor = db.client.connect().cursor()
     payload = api_parser.calculate_profits()
-    #logger.debug(f'payload: {payload}')
     insert_query = f'''
                     INSERT INTO profit
                     (timestamp, profit_rub, profit_percent)
                     VALUES ('{payload["timestamp"]}', '{payload["profit_rub"]}', '{payload["profit_percent"]}');
                     '''
     cursor.execute(insert_query)
-    #logger.debug('profit updated')
     return 'OK'
 
 

@@ -54,24 +54,16 @@ def get_actual_price():
     s = requests.Session()
     btc_request = s.get(btc_url)
     btc_responce = btc_request.json()
-
     btc_usd = btc_responce['data']['last']
-
     usd_url = 'https://www.cbr-xml-daily.ru/daily_json.js'
-    try:
-        usd_request = s.get(usd_url)
-    except requests.exceptions.ConnectionError():  # Если ошибка подключения, то взять тймаут на 10с и повторно
-        logger.warning('https://www.cbr-xml-daily.ru/daily_json.js не отвечает. Таймаут 10с.')
-        time.sleep(10)
-        usd_request = s.get(usd_url)
+    usd_request = s.get(usd_url)
     usd_responce = usd_request.json()
     usd_rub = usd_responce['Valute']['USD']['Value']
 
     btc_rub = btc_usd * usd_rub
 
     asset_sum = db.interaction.get_actual_asset_sum()
-    #logger.debug(f'asset_sum: {asset_sum}')
-    #result['btc_rub'] = round(btc_rub, 2)
+
     asset_actual_rub = btc_rub * asset_sum
 
     return {
@@ -89,7 +81,6 @@ def calculate_profits():
     timestamp = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
     try:
         profit_percent = round(profit_rub / purchase_sum * 100, 2)
-        #logger.debug(f"profit_percent=")
         #logger.debug(f'asset_actual_rub: {asset_actual_rub}\npurchase_sum: {purchase_sum}\nprofit_rub: {profit_rub}\nprofit_percent: {profit_percent}')
         return {
             "timestamp": timestamp,
@@ -102,5 +93,3 @@ def calculate_profits():
             "profit_rub": profit_rub,
             "profit_percent": '0'
             }
-
-
