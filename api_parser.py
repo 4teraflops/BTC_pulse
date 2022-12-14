@@ -1,19 +1,22 @@
 import gspread
 import requests
-from src import config
+import os
 import json
 from datetime import datetime
 import db.interaction
 from loguru import logger
-import time
+from dotenv import load_dotenv
 
 logger.add(f'log/{__name__}.log', format='{time} {level} {message}', level='DEBUG', rotation='10 MB', compression='zip')
 
 
 def do_alarm(t_alarmtext):
+    load_dotenv()
+    admin_id = os.getenv('admin_id')
+    webhook_url = os.getenv('webhook_url')
     headers = {"Content-type": "application/json"}
-    payload = {"text": f"{t_alarmtext}", "chat_id": f"{config.admin_id}"}
-    requests.post(url=config.webhook_url, data=json.dumps(payload), headers=headers)
+    payload = {"text": f"{t_alarmtext}", "chat_id": f"{admin_id}"}
+    requests.post(url=webhook_url, data=json.dumps(payload), headers=headers)
 
 
 @logger.catch()

@@ -1,26 +1,37 @@
 import psycopg2
-from src import config
 from loguru import logger
+import os
+from dotenv import load_dotenv
 
 logger.add(f'log/{__name__}.log', format='{time} {level} {message}', level='INFO', rotation='10 MB', compression='zip')
 
 
 def get_connection(db_created=False):
+
     """
         Могут быть проблемы, если есть другая ссессия с этой БД
     """
+
+    load_dotenv()
+    db_name = os.getenv('db_name')
+
     if db_created:
-        database = config.db_name
+        database = db_name
     else:
         database = ''
+
+    db_user = os.getenv('db_user')
+    db_password = os.getenv('db_password')
+    db_host = os.getenv('db_host')
+    db_port = os.getenv('db_port')
 
     #try:
     # Подключение к существующей базе данных
     conn = psycopg2.connect(
-        user=f"{config.db_user}",
-        password=f"{config.db_password}",
-        host=f"{config.db_host}",
-        port=f"{config.db_port}",
+        user=f"{db_user}",
+        password=f"{db_password}",
+        host=f"{db_host}",
+        port=f"{db_port}",
         database=f'{database}'
     )
     #logger.debug(f'database: {database}')

@@ -15,6 +15,7 @@ def update_asset():
                         VALUES ('{payload["check_datetime"]}', '{payload["asset_sum"]}', '{payload["purchase_sum"]}');
                     '''
     cursor.execute(insert_query)
+
     return 'OK'
 
 

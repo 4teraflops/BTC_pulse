@@ -2,3 +2,4 @@
 /src/
 /venv/
 exps.py
+.env

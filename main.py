@@ -36,8 +36,7 @@ class UpdateProfit(Thread):
 if __name__ == '__main__':
     try:
         # Проверка БД и таблиц
-        check_db_thread = Thread(target=db.client.check_database(rebuild_db=True), daemon=True)
-
+        check_db_thread = Thread(target=db.client.check_database(rebuild_db=False), daemon=True)
         check_db_thread.start()
         check_db_thread.join()
         # Обнволение данных из гугл таблицы
@@ -72,8 +71,9 @@ if __name__ == '__main__':
         Metrics_worker.start()
 
     except KeyboardInterrupt:
+
         print('Stopped')
-    except Exception as e:
-        t_alarmtext = f'BTC_Pulse (main.py): {str(e)}'
-        api_parser.do_alarm(t_alarmtext)
-        logger.error(f'Other except error Exception: {e}', exc_info=True)
+#    except Exception as e:
+#        t_alarmtext = f'BTC_Pulse (main.py): {str(e)}'
+#        api_parser.do_alarm(t_alarmtext)
+#        logger.error(f'Other except error Exception: {e}', exc_info=True)
