@@ -6,6 +6,7 @@ from datetime import datetime
 import db.interaction
 from loguru import logger
 from dotenv import load_dotenv
+import time
 
 logger.add(f'log/{__name__}.log', format='{time} {level} {message}', level='DEBUG', rotation='10 MB', compression='zip')
 
@@ -26,7 +27,7 @@ def get_asset():
     # Выбираем вкладку
     worksheet = sh.worksheet("BTC")
     values = worksheet.get_all_records()
-    logger.info(f"values: {values}")
+    #logger.info(f"values: {values}")
     asset_sum_list = []
     purchase_sum_list = []
     for key in values:
@@ -52,9 +53,15 @@ def get_asset():
 
 def get_actual_price():
     actual_datetime = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
-    btc_url = 'https://api.bitaps.com/market/v1/ticker/btcusd'
+    btc_url = 'https://api.bitapssss.com/market/v1/ticker/btcusd'
     s = requests.Session()
-    btc_request = s.get(btc_url)
+
+    try:
+        btc_request = s.get(btc_url)
+    except requests.exceptions.ConnectionError:
+        logger.error('Connection Error. Get pause 15s and trying again...')
+        time.sleep(15)
+        btc_request = s.get(btc_url)
     btc_responce = btc_request.json()
     btc_usd = btc_responce['data']['last']
     usd_url = 'https://www.cbr-xml-daily.ru/daily_json.js'
