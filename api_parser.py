@@ -53,7 +53,7 @@ def get_asset():
 
 def get_actual_price():
     actual_datetime = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
-    btc_url = 'https://api.bitapssss.com/market/v1/ticker/btcusd'
+    btc_url = 'https://api.bitaps.com/market/v1/ticker/btcusd'
     s = requests.Session()
 
     try:
