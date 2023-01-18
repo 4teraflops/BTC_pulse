@@ -59,8 +59,8 @@ def get_actual_price():
     try:
         btc_request = s.get(btc_url)
     except requests.exceptions.ConnectionError:
-        logger.error('Connection Error. Get pause 15s and trying again...')
-        time.sleep(15)
+        logger.error('Connection Error. Get pause 60s and trying again...')
+        time.sleep(60)
         btc_request = s.get(btc_url)
     btc_responce = btc_request.json()
     btc_usd = btc_responce['data']['last']
