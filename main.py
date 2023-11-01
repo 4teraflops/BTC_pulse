@@ -34,6 +34,7 @@ class UpdateProfit(Thread):
 
 
 if __name__ == '__main__':
+    logger.catch()
     try:
         # Проверка БД и таблиц
         check_db_thread = Thread(target=db.client.check_database(rebuild_db=False), daemon=True)
@@ -72,7 +73,7 @@ if __name__ == '__main__':
 
     except KeyboardInterrupt:
         print('Stopped')
-    except Exception as e:
-        t_alarmtext = f'BTC_Pulse (main.py): {str(e)}'
-        api_parser.do_alarm(t_alarmtext)
-        logger.error(f'Other except error Exception: {e}', exc_info=True)
+#    except Exception as e:
+#        t_alarmtext = f'BTC_Pulse (main.py): {str(e)}'
+#        api_parser.do_alarm(t_alarmtext)
+#        logger.error(f'Other except error Exception: {e}', exc_info=True)

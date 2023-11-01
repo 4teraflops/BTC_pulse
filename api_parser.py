@@ -13,8 +13,8 @@ logger.add(f'log/{__name__}.log', format='{time} {level} {message}', level='DEBU
 
 def do_alarm(t_alarmtext):
     load_dotenv()
-    admin_id = os.getenv('admin_id')
-    webhook_url = os.getenv('webhook_url')
+    admin_id = os.getenv('ADMIN_ID')
+    webhook_url = os.getenv('WEBHOOK_URL')
     headers = {"Content-type": "application/json"}
     payload = {"text": f"{t_alarmtext}", "chat_id": f"{admin_id}"}
     requests.post(url=webhook_url, data=json.dumps(payload), headers=headers)
@@ -31,15 +31,18 @@ def get_asset():
     asset_sum_list = []
     purchase_sum_list = []
     for key in values:
-        asset_sum_element = float(key['Кол-во'].replace(',', '.'))
-        asset_sum_list.append(asset_sum_element)
+        if key['Дата Закупа']:  # Смотрим чтоб первое поле не было пустым (чтоб допустить пустые погя в GoogleShit)
+            asset_sum_element = key['Кол-во'].replace(',', '.')
+            asset_sum_element_float = float(asset_sum_element)
 
-        try:
-            purchase_sum_element = float(key['Стоимость закупа'].replace(',', '.'))
-        except AttributeError:
-            purchase_sum_element = float(key['Стоимость закупа'])
+            asset_sum_list.append(asset_sum_element_float)
 
-        purchase_sum_list.append(purchase_sum_element)
+            try:
+                purchase_sum_element = float(key['Стоимость закупа'].replace(',', '.'))
+            except AttributeError:
+                purchase_sum_element = float(key['Стоимость закупа'])
+
+            purchase_sum_list.append(purchase_sum_element)
     check_datetime = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
     asset_sum = sum(asset_sum_list)
     purchase_sum = sum(purchase_sum_list)

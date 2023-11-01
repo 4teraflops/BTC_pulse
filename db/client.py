@@ -13,17 +13,17 @@ def get_connection(db_created=False):
     """
 
     load_dotenv()
-    db_name = os.getenv('db_name')
+    db_name = os.getenv('POSTGRES_DB_NAME')
 
     if db_created:
         database = db_name
     else:
         database = ''
 
-    db_user = os.getenv('db_user')
-    db_password = os.getenv('db_password')
-    db_host = os.getenv('db_host')
-    db_port = os.getenv('db_port')
+    db_user = os.getenv('POSTGRES_DB_USER')
+    db_password = os.getenv('POSTGRES_DB_PASS')
+    db_host = os.getenv('POSTGRES_DB_HOST')
+    db_port = os.getenv('POSTGRES_DB_PORT')
 
     #try:
     # Подключение к существующей базе данных
@@ -45,10 +45,11 @@ def get_connection(db_created=False):
 def connect(rebuild_db=False):
     conn = get_connection()
     if rebuild_db:
+        db_name = os.getenv('POSTGRES_DB_NAME')
         #logger.debug('Rebuild db')
         cursor = conn.cursor()
-        cursor.execute(f'DROP DATABASE IF EXISTS {config.db_name}')
-        cursor.execute(f'CREATE DATABASE {config.db_name}')
+        cursor.execute(f'DROP DATABASE IF EXISTS {db_name}')
+        cursor.execute(f'CREATE DATABASE {db_name}')
         return get_connection(db_created=True)
     return get_connection(db_created=True)
 
