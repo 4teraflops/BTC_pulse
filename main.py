@@ -10,9 +10,6 @@ logger.add(f'log/{__name__}.log', format='{time} {level} {message}', level='DEBU
 
 
 def main():
-    # Запуск трансляции метрик
-    metrics_worker = metrics.metrics.run()
-    metrics_worker.start()
 
     # Проверка БД и таблиц
     check_db_thread = Thread(target=db.client.check_database(rebuild_db=False), daemon=True)
@@ -39,6 +36,10 @@ def main():
         update_profit_thread.start()
         update_profit_thread.join()
         #print("update profit worker отработал")
+
+        # Запуск трансляции метрик
+        metrics_worker = metrics.metrics.run()
+        metrics_worker.start()
 
         time.sleep(300)
 
