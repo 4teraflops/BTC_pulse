@@ -37,10 +37,6 @@ def main():
         update_profit_thread.join()
         #print("update profit worker отработал")
 
-        # Запуск трансляции метрик
-        metrics_worker = metrics.metrics.run()
-        metrics_worker.start()
-
         time.sleep(300)
 
 
