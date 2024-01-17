@@ -44,11 +44,13 @@ def get_connection(db_created=False):
 
 def connect(rebuild_db=False):
     conn = get_connection()
+    load_dotenv()
+    db_name = os.getenv('db_name')
     if rebuild_db:
         #logger.debug('Rebuild db')
         cursor = conn.cursor()
-        cursor.execute(f'DROP DATABASE IF EXISTS {config.db_name}')
-        cursor.execute(f'CREATE DATABASE {config.db_name}')
+        cursor.execute(f'DROP DATABASE IF EXISTS {db_name}')
+        cursor.execute(f'CREATE DATABASE {db_name}')
         return get_connection(db_created=True)
     return get_connection(db_created=True)
 

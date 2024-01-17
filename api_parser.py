@@ -55,32 +55,38 @@ def get_actual_price():
     actual_datetime = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
     btc_url = 'https://api.bitaps.com/market/v1/ticker/btcusd'
     s = requests.Session()
+    attempts = 0
+    while attempts < 10:
+        try:
+            btc_request = s.get(btc_url)
+            if s.get(btc_url).status_code == 200:
 
-    try:
-        btc_request = s.get(btc_url)
-    except requests.exceptions.ConnectionError:
-        logger.error('Connection Error. Get pause 60s and trying again...')
-        time.sleep(60)
-        btc_request = s.get(btc_url)
-    btc_responce = btc_request.json()
-    btc_usd = btc_responce['data']['last']
-    usd_url = 'https://www.cbr-xml-daily.ru/daily_json.js'
-    usd_request = s.get(usd_url)
-    usd_responce = usd_request.json()
-    usd_rub = usd_responce['Valute']['USD']['Value']
+                btc_response = btc_request.json()
+                btc_usd = btc_response['data']['last']
+                usd_url = 'https://www.cbr-xml-daily.ru/daily_json.js'
+                usd_request = s.get(usd_url)
+                usd_response = usd_request.json()
+                usd_rub = usd_response['Valute']['USD']['Value']
 
-    btc_rub = btc_usd * usd_rub
+                btc_rub = btc_usd * usd_rub
 
-    asset_sum = db.interaction.get_actual_asset_sum()
+                asset_sum = db.interaction.get_actual_asset_sum()
 
-    asset_actual_rub = btc_rub * asset_sum
+                asset_actual_rub = btc_rub * asset_sum
 
-    return {
-        "actual_datetime": actual_datetime,
-        "btc_usd": btc_usd,
-        "btc_rub": round(btc_rub, 2),
-        "asset_actual_rub": round(asset_actual_rub, 2)
-    }
+                return {
+                    "actual_datetime": actual_datetime,
+                    "btc_usd": btc_usd,
+                    "btc_rub": round(btc_rub, 2),
+                    "asset_actual_rub": round(asset_actual_rub, 2)
+                }
+
+        except requests.exceptions.ConnectionError:
+            logger.error('Connection Error. Get pause 60s and trying again...')
+            attempts += 1
+            time.sleep(6)
+
+
 
 
 def calculate_profits():

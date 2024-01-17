@@ -33,14 +33,8 @@ def get_actual_asset_sum():
 
 def update_actual_price():
     cursor = db.client.connect().cursor()
-    try:
-        payload = api_parser.get_actual_price()
-    except TypeError:
-        logger.error('Cant read api_parser.get_actual_price(): TypeError')
-        logger.warning('https://www.cbr-xml-daily.ru/daily_json.js не отвечает. Таймаут 10с.')
-        time.sleep(10)
-        payload = api_parser.get_actual_price()
-        pass
+    payload = api_parser.get_actual_price()
+
     insert_query = f'''
                         INSERT INTO actual_price
                         (datetime, btc_usd, btc_rub, asset_actual_rub)
