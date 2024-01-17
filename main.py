@@ -14,12 +14,13 @@ def main():
     metrics_worker = metrics.metrics.run()
     metrics_worker.start()
 
+    # Проверка БД и таблиц
+    check_db_thread = Thread(target=db.client.check_database(rebuild_db=False), daemon=True)
+    check_db_thread.start()
+    check_db_thread.join()
+    # print("check db отработал")
+
     while True:
-        # Проверка БД и таблиц
-        check_db_thread = Thread(target=db.client.check_database(rebuild_db=False), daemon=True)
-        check_db_thread.start()
-        check_db_thread.join()
-        #print("check db отработал")
 
         # Обнволение данных из гугл таблицы
         update_asset_thread = Thread(target=db.interaction.update_asset)
