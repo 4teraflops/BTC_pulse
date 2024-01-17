@@ -10,6 +10,9 @@ logger.add(f'log/{__name__}.log', format='{time} {level} {message}', level='DEBU
 
 
 def main():
+    # Запуск трансляции метрик
+    metrics_worker = metrics.metrics.run()
+    metrics_worker.start()
 
     while True:
         # Проверка БД и таблиц
@@ -39,13 +42,11 @@ def main():
         time.sleep(300)
 
 
+
 if __name__ == '__main__':
     try:
         main()
 
-        # Запуск трансляции метрик
-        metrics_worker = metrics.metrics.run()
-        metrics_worker.start()
     except KeyboardInterrupt:
         print('Stopped')
     except Exception as e:
